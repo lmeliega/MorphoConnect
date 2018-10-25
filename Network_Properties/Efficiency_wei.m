@@ -1,0 +1,59 @@
+function [Eglob, Enod, Eloc] = Efficiency_wei(Mat,D)
+
+% [Eglob, Enod, Eloc] = Efficiency(Mat,D)
+% ...calculates Efficiency as a traffic capacity  measure of a network
+
+% Mat= Binary inputmatrix , size NxN, N=number of channels
+% D= Distancematrix after Dijkstra’s algorithm to find shortest path has been
+%    applied, size NxN, N=number of channels. The distance matrix D(G) records 
+%    the distances between j and i, defined as the length of the shortest path
+%    between them.
+% Eglob= Global efficiency: how efficiently information can be exchanged over network, 
+% Enod= Nodal efficiency:
+% Eloc= Local efficiency: average efficiency of the local subgraphs, measures how much
+%       system is fault tolerant
+
+N = size(Mat,1);
+
+diag = [1: N; 1: N]';
+diag = sub2ind(size(Mat), diag(:, 1), diag(:, 2));
+Mat(diag) = 0;
+
+if isinv
+    Mat = Mat.^(-1); ind = isinf(Mat); Mat(ind)= 0; 
+end
+
+if nargin < 4
+    D = distance_wu(Mat); 
+end
+
+ind = isinf(D); 
+D(ind) = 0;
+
+% Global efficiency:
+if isdir
+    Eglob = efficiencyG_dir(D);
+else
+    Eglob = efficiencyG_und(D);
+end
+
+if nargout > 1 % Nodal efficiency:
+    Enod = zeros(N, 1);
+    
+    for node = 1: N
+        ind = find(Mat(node, :));
+        if length(ind) > 1
+            Mat2 = Mat(ind, ind); 
+            Di = distance_wu(Mat2);         
+            if isdir
+                Enod(node) = efficiencyG_dir(Di);
+            else
+                Enod(node) = efficiencyG_und(Di);
+            end
+        end
+    end
+end
+
+if nargout > 2 % Local efficiency:
+    Eloc = mean(Enod);
+end
