@@ -1,3 +1,4 @@
+![MorphoConnect Toolbox](https://github.com/lmeliega/MorphoConnect/blob/master/Main_Functions/logo_morpho02_01.jpg)
 # MorphoConnect
 This is a MATLAB Toolbox for studying the Brain Networks of anatomical/functional covariance based on different Neuroimaging Techniques.
 This type of networks has been widely used to study connectivity patterns in both normal and pathological brains based on the concurrent changes of morphometric/functional/microstructure-tissue measures (i.e. cortical thickness, myelin) between brain structures across subjects (Evans, 2013, Melie-Garcia et. al. 2018).
